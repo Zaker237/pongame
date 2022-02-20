@@ -1,3 +1,6 @@
+
+import time
+
 import pygame
 pygame.init()
 
@@ -17,6 +20,9 @@ BALL_RADUIS = 7
 SCORE_FONT = pygame.font.SysFont("comicsans", 20)
 
 WINNING_SCORE = 5
+
+START_TIME = 0
+TIME_ROUND = 1
 
 class Paddle(object):
     COLOR = WHITE
@@ -133,8 +139,34 @@ def handel_collision(ball: Ball, left_paddle: Paddle, right_paddle: Paddle):
                 y_vel = difference_in_y / reduction_factor
                 ball.y_velocity = -1 * y_vel
 
+def handle_time(ball: Ball, left_paddle: Paddle, right_paddle: Paddle, duration, time_rund):
+    if(duration//10 % 10 >= time_rund):
+        if left_paddle.VELOCITY >= 0:
+            left_paddle.VELOCITY += 1
+        else:
+            left_paddle.VELOCITY -= 1
+        
+        if right_paddle.VELOCITY >= 0:
+            right_paddle.VELOCITY += 1
+        else: 
+            right_paddle.VELOCITY -= 1
+        
+        if ball.x_velocity >= 0:
+            ball.x_velocity += 1
+        else:
+            ball.x_velocity -= 1
+        
+        if ball.y_velocity >= 0:
+            ball.y_velocity += 1
+        else:
+            ball.y_velocity -= 1
+        return 1
+    else:
+        return 0
+
 
 def main():
+    global TIME_ROUND
     run = True
     clock = pygame.time.Clock()
 
@@ -145,6 +177,8 @@ def main():
 
     left_score = 0
     right_score = 0
+
+    START_TIME = time.time()
 
     while run:
         clock.tick(FPS)
@@ -164,9 +198,15 @@ def main():
         if ball.x < 0:
             right_score += 1
             ball.reset()
+            left_paddle.reset()
+            right_paddle.reset()
+            START_TIME = time.time()
         elif ball.x > WIDTH:
             left_score += 1
             ball.reset()
+            left_paddle.reset()
+            right_paddle.reset()
+            START_TIME = time.time()
 
         won = False
         if left_score >= WINNING_SCORE:
@@ -186,6 +226,17 @@ def main():
             right_paddle.reset()
             left_score = 0
             right_score = 0
+            start_time = time.time()
+            TIME_ROUND = 1
+        
+        duration = int(time.time() - START_TIME)
+        TIME_ROUND +=  handle_time(ball, left_paddle, right_paddle, duration, TIME_ROUND)
+        print("Time rund", TIME_ROUND)
+        print("game duration", duration)
+        print("left vel", left_paddle.VELOCITY)
+        print("right vel", right_paddle.VELOCITY)
+        print("ball x vel", ball.x_velocity)
+        print("ball y vel", ball.y_velocity)
     
     pygame.quit()
 
