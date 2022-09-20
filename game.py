@@ -88,7 +88,7 @@ def draw(win, paddles, ball, left_score, right_score):
 
     for paddle in paddles:
         paddle.draw(win)
-    
+
     ball.draw(win)
 
     for i in range(10, HEIGHT, HEIGHT//20):
@@ -145,17 +145,17 @@ def handle_time(ball: Ball, left_paddle: Paddle, right_paddle: Paddle, duration,
             left_paddle.VELOCITY += 1
         else:
             left_paddle.VELOCITY -= 1
-        
+
         if right_paddle.VELOCITY >= 0:
             right_paddle.VELOCITY += 1
-        else: 
+        else:
             right_paddle.VELOCITY -= 1
-        
+
         if ball.x_velocity >= 0:
             ball.x_velocity += 1
         else:
             ball.x_velocity -= 1
-        
+
         if ball.y_velocity >= 0:
             ball.y_velocity += 1
         else:
@@ -188,7 +188,7 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
                 break
-        
+
         keys = pygame.key.get_pressed()
         handel_paddel_movement(keys, left_paddle, right_paddle)
 
@@ -215,7 +215,7 @@ def main():
         elif right_score >= WINNING_SCORE:
             won = True
             win_text = "Player 2 Won!"
-        
+
         if won:
             text = SCORE_FONT.render(win_text, 1, WHITE)
             WIN.blit(text, (WIDTH//2 - text.get_width()//2, HEIGHT//2 - text.get_height()//2))
@@ -228,7 +228,7 @@ def main():
             right_score = 0
             start_time = time.time()
             TIME_ROUND = 1
-        
+
         duration = int(time.time() - START_TIME)
         TIME_ROUND +=  handle_time(ball, left_paddle, right_paddle, duration, TIME_ROUND)
         print("Time rund", TIME_ROUND)
@@ -237,7 +237,7 @@ def main():
         print("right vel", right_paddle.VELOCITY)
         print("ball x vel", ball.x_velocity)
         print("ball y vel", ball.y_velocity)
-    
+
     pygame.quit()
 
 if __name__ == "__main__":
